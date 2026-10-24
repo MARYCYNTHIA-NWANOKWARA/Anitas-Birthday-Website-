@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOUCH - For You</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Montserrat:wght@300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:'Cormorant Garamond',serif;min-height:100vh;padding:24px;display:flex;flex-direction:column;align-items:center}
+a{text-decoration:none !important}
+.back{align-self:flex-start;color:#ffb6d9;font-family:Montserrat,sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;border:1px solid #ffb6d9;padding:10px 18px;border-radius:30px;margin-bottom:24px;transition:.3s}
+.back:hover{background:#ffb6d9;color:#000}
+h1{color:#ffb6d9;font-weight:300;font-size:clamp(28px,8vw,42px);letter-spacing:2px;margin-bottom:6px;text-align:center}
+.sub{color:#e8d5d5;font-style:italic;font-size:clamp(14px,4vw,18px);margin-bottom:32px;text-align:center;opacity:0.8}
+.vouchers{display:grid;gap:16px;width:100%;max-width:500px}
+.voucher{
+  background:#111;border:1px dashed #ffb6d9;border-radius:14px;padding:22px 20px;
+  position:relative;overflow:hidden;cursor:pointer;transition:all .4s ease;
+  animation:up .6s ease forwards;
+}
+.voucher:nth-child(2){animation-delay:.1s}
+.voucher:nth-child(3){animation-delay:.2s}
+.voucher:nth-child(4){animation-delay:.3s}
+.voucher:hover{transform:scale(1.02);background:#181118;box-shadow:0 0 20px rgba(255,182,217,0.15)}
+.voucher.redeemed{background:rgba(255,182,217,0.08);border-style:solid;pointer-events:none}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.top span:first-child{font-size:11px;letter-spacing:3px;color:#ffb6d9;font-family:Montserrat,sans-serif}
+.top span:last-child{font-size:11px;background:#ffb6d9;color:#000;padding:4px 10px;border-radius:20px;font-family:Montserrat,sans-serif}
+.voucher h2{font-size:20px;font-weight:400;margin-bottom:6px;letter-spacing:0.5px}
+.voucher p{color:#aaa;font-size:14px;font-style:italic;line-height:1.4}
+.redeem{margin-top:14px;font-family:Montserrat,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#ffb6d9;opacity:0.9}
+.voucher.redeemed .redeem{color:#555}
+.voucher.redeemed .redeem::after{content:" ✓ REDEEMED";color:#ffb6d9}
+#hugOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:99;flex-direction:column}
+#hugOverlay.show{display:flex;animation:fade .4s ease}
+#hugOverlay h2{font-size:clamp(32px,10vw,56px);font-weight:300;color:#fff;margin-bottom:10px}
+#hugOverlay p{color:#ffb6d9;font-style:italic;font-size:18px}
+.heart{position:fixed;pointer-events:none;animation:floatUp 1.5s ease forwards;font-size:24px;z-index:100}
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-120px) scale(1.5);opacity:0}}
+</style>
+</head>
+<body>
+
+<a href="giftcards.html" class="back">← Back</a>
+<h1>✋ TOUCH</h1>
+<div class="sub">things I want to give you, in person</div>
+
+<div class="vouchers">
+  <div class="voucher" onclick="redeem(this,'Hug')">
+    <div class="top"><span>VOUCHER 01</span><span>∞ VALID</span></div>
+    <h2>One Long Hug</h2>
+    <p>For when the day is too much. No words, just hug.</p>
+    <div class="redeem">Click to redeem →</div>
+  </div>
+
+  <div class="voucher" onclick="redeem(this,'Shoulder')">
+    <div class="top"><span>VOUCHER 02</span><span>∞ VALID</span></div>
+    <h2>Shoulder to Lean On</h2>
+    <p>When you need to rest. I'm here.</p>
+    <div class="redeem">Click to redeem →</div>
+  </div>
+
+  <div class="voucher" onclick="redeem(this,'Dance')">
+    <div class="top"><span>VOUCHER 03</span><span>∞ VALID</span></div>
+    <h2>Kitchen Dance</h2>
+    <p>You, me, loud music, bad moves. Anytime.</p>
+    <div class="redeem">Click to redeem →</div>
+  </div>
+</div>
+
+<div id="hugOverlay" onclick="this.classList.remove('show')">
+  <h2 id="hugText">Hug Sent</h2>
+  <p>tap anywhere to close</p>
+</div>
+
+<script>
+function redeem(el,type){
+  el.classList.add('redeemed');
+  // hearts
+  for(let i=0;i<12;i++){
+    setTimeout(()=>{
+      let h=document.createElement('div');
+      h.className='heart';
+      h.textContent=['💗','💖','🤍'][Math.floor(Math.random()*3)];
+      h.style.left=Math.random()*100+'vw';
+      h.style.top=(el.getBoundingClientRect().top+window.scrollY)+'px';
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(),1500);
+    },i*80);
+  }
+  // overlay
+  let overlay=document.getElementById('hugOverlay');
+  let text=document.getElementById('hugText');
+  text.textContent= type==='Dance' ? 'Dancing...' : type==='Shoulder' ? 'Lean on me' : 'Hug Sent 🤍';
+  overlay.classList.add('show');
+  setTimeout(()=>overlay.classList.remove('show'),1800);
+}
+</script>
+
+</body>
+</html>

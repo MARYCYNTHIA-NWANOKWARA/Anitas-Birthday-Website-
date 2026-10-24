@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGHT - For You</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Montserrat:wght@300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:'Cormorant Garamond',serif;padding:24px;display:flex;flex-direction:column;align-items:center}
+a{text-decoration:none !important}
+.back{align-self:flex-start;color:#ffb6d9;font-family:Montserrat,sans-serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;border:1px solid #ffb6d9;padding:10px 18px;border-radius:30px;margin-bottom:24px}
+h1{color:#ffb6d9;font-weight:300;font-size:clamp(28px,8vw,42px);letter-spacing:2px;margin-bottom:6px}
+video{
+  width:260px; height:140px; border:1px solid pink; border-radius:20px;
+}
+.sub{color:#e8d5d5;font-style:italic;font-size:16px;margin-bottom:28px;opacity:.8;text-align:center}
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:500px;width:100%}
+.polaroid{background:#111;border:1px solid #222;border-radius:12px;padding:10px 10px 32px;transform:rotate(var(--r));transition:.3s;cursor:pointer}
+.polaroid:hover{transform:rotate(0deg) scale(1.05);z-index:2}
+.polaroid img{width:100%;height:180px;object-fit:cover;border-radius:6px;display:block}
+.polaroid p{font-size:13px;font-style:italic;color:#aaa;margin-top:10px;text-align:center}
+.text-box{max-width:500px;width:100%;margin-top:30px;background:#111;border:1px solid #222;border-radius:14px;padding:22px}
+.text-box h3{color:#ffb6d9;font-size:11px;letter-spacing:3px;font-family:Montserrat,sans-serif;margin-bottom:12px}
+.text-box p{font-size:16px;line-height:1.7;color:#e8d5d5;margin-bottom:8px}
+.top-3-text{
+  margin-bottom:15px;
+}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;z-index:99;padding:20px}
+#modal.show{display:flex} #modal img{max-width:90vw;max-height:80vh;border-radius:12px}
+</style>
+</head>
+<body>
+<a href="giftcards.html" class="back">← Back</a>
+<h1>👁️ SIGHT</h1>
+<div class="sub">how we see you</div>
+
+
+
+<div id="modal" onclick="this.classList.remove('show')"><img id="modalImg"></div>
+
+<section class="sight-videos">
+  
+  <!-- TOP 3 - Big and special -->
+  <div class="top-3">
+    <h2 class=“top3-text“>Top 3 People Who See You Clearly 👑</h2><br><br>
+ 
+    
+    <div class="video-grid top">
+      <!-- Person 1 -->
+      <div class="video-card featured">
+        <video controls poster="thumbnail1.jpg">
+          <source src="videos/bro-wish.mp4" type="video/mp4">
+        </video>
+        <h3>Big bro ❤️</h3> <br>
+      </div>
+      
+      <!-- Person 2 -->
+      <div class="video-card featured">
+        <video controls poster="thumbnail2.jpg">
+          <source src="videos/barrister-wish.mp4" type="video/mp4">
+        </video>
+        <h3>Barrister</h3><br>
+      </div>
+      
+      <!-- Person 3 -->
+      <div class="video-card featured">
+        <video controls poster="thumbnail3.jpg">
+          <source src="videos/hg-wish.mp4" type="video/mp4">
+        </video>
+        <h3>Home girl</h3><br><br>
+      </div>
+    </div>
+  </div>
+  
+  <!-- REMAINING 7 - Smaller grid -->
+  <div class="other-7">
+    <h2>7 More People Who Adore You ✨</h2>
+    
+    <div class="video-grid small">
+      <!-- Repeat this 7 times -->
+      <div class="video-card">
+        <video controls>
+          <source src="videos/friends.mp4" type="video/mp4">
+        </video>
+        <p>Happy Birthdayyy🌚❤️</p>
+      </div>
+      <!-- copy for friend 2, 3, 4, 5, 6, 7 -->
+    </div>
+  </div>
+  
+</section>
+<script>
+function openModal(el){document.getElementById('modalImg').src=el.querySelector('img').src;document.getElementById('modal').classList.add('show')}
+</script>
+</body>
+</html>

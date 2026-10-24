@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smell - For You</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:#fff5f7;
+    font-family:'Poppins',sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    overflow:hidden;
+  }
+  h1{font-family:'Playfair Display',serif;font-size:2rem;color:#2d2d2d;margin-bottom:6px}
+  .subtitle{color:#8a8a8a;font-size:0.9rem;margin-bottom:30px}
+
+  .wrapper{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    max-width:400px;
+    height:350px;
+  }
+  .scene{
+    position:relative;
+    width:160px;
+    height:300px;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .bottle{
+    position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+    width:120px;height:165px;
+    background:linear-gradient(180deg,#ffe0ec 0%, #ff9eb8 100%);
+    border-radius:18px 18px 35px 35px;
+    box-shadow:inset -10px -10px 20px rgba(0,0,0,0.1), 0 15px 30px rgba(255,105,149,0.3);
+    display:flex;align-items:center;justify-content:center;
+    z-index:2;
+  }
+  .bottle::before{
+    content:'';position:absolute;top:-16px;width:46px;height:20px;
+    background:linear-gradient(#ffd700,#ffb700);border-radius:6px;
+  }
+  .bottle::after{
+    content:'ATELIER';font-size:0.5rem;letter-spacing:3px;color:#fff;
+    border:1px solid #fff;padding:5px 10px;border-radius:20px;opacity:0.8;
+  }
+  .cap{
+    position:absolute;bottom:165px;left:50%;transform:translateX(-50%);
+    width:28px;height:40px;background:#2d2d2d;border-radius:7px 7px 3px 3px;z-index:1;
+  }
+  .spray-btn{
+    position:absolute;bottom:205px;left:50%;transform:translateX(-50%);
+    background:#ff4d8d;color:white;border:none;padding:7px 14px;
+    border-radius:20px;font-size:0.7rem;font-weight:600;z-index:5;
+    animation:bounce 1.4s infinite;cursor:pointer;
+  }
+  @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-4px)}}
+
+  /* TEXT BUBBLE - NOW BESIDE BOTTLE */
+  .message{
+    position:absolute;
+    left:165px;
+    bottom:140px;
+    width:180px;
+    background:white;
+    padding:14px 16px;
+    border-radius:18px 18px 18px 4px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+    opacity:0;
+    transform:translateX(-10px) scale(0.9);
+    transition:all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events:none;
+    z-index:10;
+  }
+  .message.show{opacity:1;transform:translateX(0) scale(1)}
+  .message p{font-size:0.85rem;color:#333;line-height:1.4;text-align:left}
+  .message b{color:#ff4d8d}
+  .message::before{
+    content:'';position:absolute;left:-6px;bottom:12px;
+    width:12px;height:12px;background:white;
+    transform:rotate(45deg);
+  }
+  .hint{
+    position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);
+    font-size:0.7rem;color:#bbb;white-space:nowrap;width:100%;text-align:center;
+  }
+
+  /* Puffs */
+  .puff{
+    position:absolute;bottom:230px;left:50%;
+    width:10px;height:10px;
+    background:radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,182,200,0.6) 40%, transparent 70%);
+    border-radius:50%;pointer-events:none;opacity:0;
+  }
+  .puff.animate{animation:puffUp 1.6s ease-out forwards}
+  @keyframes puffUp{
+    0%{transform:translateX(-50%) translateY(0) scale(0.5);opacity:0}
+    20%{opacity:0.9}
+    100%{transform:translateX(var(--x)) translateY(-180px) scale(var(--s));opacity:0}
+  }
+
+  /* Mobile - stack bubble on top */
+  @media(max-width:420px){
+    .message{left:50%;bottom:285px;transform:translateX(-50%) scale(0.9);width:260px;border-radius:18px 18px 18px 18px}
+    .message.show{transform:translateX(-50%) scale(1)}
+    .message::before{left:50%;bottom:-5px;transform:translateX(-50%) rotate(45deg)}
+    .wrapper{height:420px;align-items:flex-end;padding-bottom:40px}
+  }
+</style>
+</head>
+<body>
+
+  <h1>Smell</h1>
+  <p class="subtitle">tap the bottle, bestie</p>
+
+  <div class="wrapper">
+    <div class="scene" id="scene">
+      <button class="spray-btn">spray ✨</button>
+      <div class="cap"></div>
+      <div class="bottle" id="bottle"></div>
+      
+      <!-- TEXT NOW HERE - BESIDE BUTTON -->
+      <div class="message" id="message">
+        <p>Virtually inhale that <b>ateliêr</b> perfume we can't afford yet 😂<br> You can keep on tapping shaa</p>
+      </div>
+      
+      <p class="hint" id="hint">tap to spray</p>
+    </div>
+  </div>
+
+<script>
+  const scene = document.getElementById('scene');
+  const message = document.getElementById('message');
+  const hint = document.getElementById('hint');
+  let count = 0;
+
+  function spray(){
+    count++;
+    message.classList.add('show');
+    if(count==1) hint.textContent = "again? okay perfume girl 🤭";
+    if(count>1) hint.textContent = `${count} sprays - you're smelling expensive!`;
+    
+    for(let i=0;i<7;i++){
+      const puff = document.createElement('div');
+      puff.className='puff';
+      puff.style.setProperty('--x',(Math.random()*100-50)+'px');
+      puff.style.setProperty('--s',Math.random()*2+1.2);
+      scene.appendChild(puff);
+      requestAnimationFrame(()=>puff.classList.add('animate'));
+      setTimeout(()=>puff.remove(),1600);
+    }
+    if(navigator.vibrate) navigator.vibrate(30);
+  }
+  scene.addEventListener('click', spray);
+</script>
+</body>
+</html>
